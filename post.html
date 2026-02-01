@@ -4,7 +4,6 @@
   <title>Статья — wuj1avdev</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* === Скопируй сюда твой общий .content-box и базовые стили === */
     body {
       background-color: whitesmoke;
       margin: 0;
@@ -15,10 +14,8 @@
       padding: 20px 0;
     }
 .article-image{
-
     height: 28rem;
     width: 100%;
-    background-image: url("https://avatars.mds.yandex.net/i?id=3a63f7b3d0224320ec89a5a1b8429ec1_l-12307238-images-thumbs&n=13");
     background-size: 100%;
     background-position: center;
 }
@@ -162,18 +159,17 @@
       const post = posts[title];
 
       if (post) {
-        document.title = `${title} — wuj1avdev`;
+        document.title = `${post.title} — блог меня, wuj1av =I`;
         
         let html = `
           <div class="article-meta">
             <i class="fa-regular fa-calendar"></i> ${post.date}
           </div>
-          <h1 class="article-title">${title}</h1>
+          <h1 class="article-title">${post.title}</h1>
         `;
 
-        // Добавляем изображение, если оно есть
         if (post.image) {
-          html += `<div style="background-image: url(${post.image})" alt="${title}" class="article-image"></div>`;
+          html += `<div style="background-image: url(${post.image})" alt="${post.title}" class="article-image"></div>`;
         }
 
         html += `<div class="article-body">${post.content}</div>`;
