@@ -1,0 +1,201 @@
+<html lang="ru"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Статья — wuj1avdev</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* === Скопируй сюда твой общий .content-box и базовые стили === */
+    body {
+      background-color: whitesmoke;
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+    }
+.article-image{
+
+    height: 28rem;
+    width: 100%;
+    background-image: url("https://avatars.mds.yandex.net/i?id=3a63f7b3d0224320ec89a5a1b8429ec1_l-12307238-images-thumbs&n=13");
+    background-size: 100%;
+    background-position: center;
+}
+    .content-box {
+      width: 67rem;
+      box-shadow: 0 0 16px 12px rgba(34, 60, 80, 0.2);
+      background: white;
+      padding: 1rem 2rem;
+    }
+    .article-title {
+      font-family: "Sitka Heading", serif;
+      font-size: 3rem;
+      margin: 0 0 1rem;
+    }
+    .article-meta {
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+    .article-meta i {
+      margin-right: 0.4rem;
+    }
+    #article-content {
+      line-height: 1.7;
+      color: #333;
+    }
+    #article-not-found {
+      text-align: center;
+      color: #888;
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body style="
+    background-color: whitesmoke;
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 0;
+">
+<div class="bg" style="
+    position: absolute;
+    z-index: -9999999;
+    width: 100%;
+    height: 20rem;
+    background: #1c787d;
+    box-shadow: 0px 4px 8px 0px rgba(34, 60, 80, 0.2);
+"></div><header class="flex__ctr-elements" style="
+    height: 75px;
+    gap: 5rem;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+"><div style="
+    font-size: 2rem;
+    /* комик санс :) */
+    font-family: cursive;
+    color: white;
+">wuj1avdev</div><nav style="
+    font-size: 1.3rem;
+">
+  <ul class="nav-list" style="
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    text-decoration: none;
+    gap: 3rem;
+    color: white;
+">
+    <li style="
+    font-family: system-ui;
+    text-decoration: none;
+"><a href="/" style="
+    text-decoration: inherit;
+    color: inherit;
+">Главная</a></li>
+    <li style="
+    font-family: system-ui;
+    text-decoration: none;
+"><a href="/about" style="
+    text-decoration: inherit;
+    color: inherit;
+">Продукты</a></li>
+    <li style="
+    font-family: system-ui;
+    text-decoration: none;
+"><a href="/services" style="
+    color: inherit;
+    text-decoration: inherit;
+">Я в соцсетях</a></li>
+    
+  </ul>
+</nav><div style="
+    font-family: system-ui;
+"><input placeholder="Поиск..." name="search" id="search" style="
+    border: none;
+    border-radius: 10px 0px 0px 10px;
+    padding: 8px 13px;
+    font-family: inherit;
+    font-size: 1rem;
+"><button style="
+    position: relative;
+    padding: 10px 13px;
+    border: none;
+    background: linear-gradient(45deg, #800cc9, #2418d9);
+    border-radius: 0px 10px 10px 0px;
+    font-family: inherit;
+    color: white;
+    bottom: 2px;
+">Искать по сайту
+</button></div></header>
+  <main class="content-box">
+    <div id="article-loader">Загрузка...</div>
+    <article id="article-content" style="display: none;"></article>
+    <div id="article-not-found" style="display: none;">
+      <h2>Статья не найдена</h2>
+      <p>Проверь правильность ссылки.</p>
+    </div>
+  </main>
+
+  <script>
+  const loadPosts = async () => {
+    const response = await fetch('./api/blogposts.json');
+    const posts = await response.json();
+    return posts;
+  };
+  loadPosts().then(posts => {
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const titleEncoded = urlParams.get('n');
+
+  if (!titleEncoded) {
+    showNotFound();
+  } else {
+    try {
+      const title = decodeURIComponent(titleEncoded);
+      const post = posts[title];
+
+      if (post) {
+        document.title = `${title} — wuj1avdev`;
+        
+        let html = `
+          <div class="article-meta">
+            <i class="fa-regular fa-calendar"></i> ${post.date}
+          </div>
+          <h1 class="article-title">${title}</h1>
+        `;
+
+        // Добавляем изображение, если оно есть
+        if (post.image) {
+          html += `<div style="background-image: url(${post.image})" alt="${title}" class="article-image"></div>`;
+        }
+
+        html += `<div class="article-body">${post.content}</div>`;
+        
+        document.getElementById('article-content').innerHTML = html;
+        document.getElementById('article-loader').style.display = 'none';
+        document.getElementById('article-content').style.display = 'block';
+      } else {
+        showNotFound();
+      }
+    } catch (e) {
+      showNotFound();
+    }
+  }
+
+  function showNotFound() {
+    document.getElementById('article-loader').style.display = 'none';
+    document.getElementById('article-not-found').style.display = 'block';
+  }
+  });
+</script>
+<footer style="padding: 2rem 0px;font-family: &quot;Arial&quot;;text-align: center;width: 100%;color: #b9b9b9;background: #414141;">Футер сайта
+</footer>
+
+</body></html>
